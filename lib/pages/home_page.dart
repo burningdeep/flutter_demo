@@ -1,0 +1,119 @@
+// Copyright 2019 The FlutterCandies author. All rights reserved.
+// Use of this source code is governed by an Apache license that can be found
+// in the LICENSE file.
+
+import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
+import 'package:flutter/services.dart';
+
+import '../constants/screens.dart';
+import '../customs/custom_picker_page.dart';
+import '../main.dart';
+import 'multi_assets_page.dart';
+import 'single_assets_page.dart';
+
+bool get currentIsDark =>
+    Screens.mediaQuery.platformBrightness == Brightness.dark;
+
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final PageController controller = PageController();
+  int currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    controller.addListener(pageControllerListener);
+  }
+
+  void selectIndex(int index) {
+    if (index == currentIndex) {
+      return;
+    }
+    controller.animateToPage(
+      index,
+      duration: kThemeAnimationDuration,
+      curve: Curves.easeInOut,
+    );
+  }
+
+  void pageControllerListener() {
+    final int? currentPage = controller.page?.round();
+    if (currentPage != null && currentPage != currentIndex) {
+      currentIndex = currentPage;
+      if (mounted) {
+        setState(() {});
+      }
+    }
+  }
+
+  Widget header(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(top: 30.0, left: 40.0),
+      height: 60.0,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          AspectRatio(
+            aspectRatio: 1.0,
+            child: Hero(
+              tag: 'LOGO',
+              child: Image.asset('assets/aribiologo.png'),
+            ),
+          ),
+          const SizedBox(width: 30.0),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Semantics(
+                sortKey: const OrdinalSortKey(0),
+                child: Text(
+                  'Flutter Demo',
+                  style: Theme.of(context).textTheme.headline6,
+                ),
+              ),
+              Semantics(
+                sortKey: const OrdinalSortKey(0.1),
+                child: Text(
+                  'Version: ${packageVersion ?? 'unknown'}',
+                  style: Theme.of(context).textTheme.caption,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(width: 20.0),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: currentIsDark
+          ? SystemUiOverlayStyle.light
+          : SystemUiOverlayStyle.dark,
+      child: Scaffold(
+        body: SafeArea(
+          child: Column(
+            children: <Widget>[
+              header(context),
+              const SizedBox(height: 8.0),
+              const Divider(),
+              const Expanded(
+                child: SingleAssetPage(),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
