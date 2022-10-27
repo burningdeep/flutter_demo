@@ -27,7 +27,6 @@ class _SingleAssetPageState extends State<SingleAssetPage>
     return <PickMethod>[
       PickMethod.image(maxAssetsCount),
       PickMethod.video(maxAssetsCount),
-      PickMethod.audio(maxAssetsCount),
       PickMethod.camera(
         maxAssetsCount: maxAssetsCount,
         handleResult: (BuildContext context, AssetEntity result) =>
