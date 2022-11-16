@@ -3,29 +3,13 @@
 // in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:flutter_demo/constants/asset_picker_text_delegate.dart';
-import 'package:flutter_demo/constants/camera_picker_text_delegate.dart';
 import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 import 'package:wechat_camera_picker/wechat_camera_picker.dart';
 
 Future<AssetEntity?> _pickFromCamera(BuildContext c) {
   return CameraPicker.pickFromCamera(
     c,
-    pickerConfig: const CameraPickerConfig(
-      enableRecording: false,
-      textDelegate: KoreanCameraPickerTextDelegate(),
-    ),
-  );
-}
-
-Future<AssetEntity?> _pickFromCamcorder(BuildContext c) {
-  return CameraPicker.pickFromCamera(
-    c,
-    pickerConfig: const CameraPickerConfig(
-        onlyEnableRecording: true,
-        enableRecording: true,
-        enableTapRecording: true,
-        textDelegate: KoreanCameraPickerTextDelegate()),
+    pickerConfig: const CameraPickerConfig(enableRecording: true),
   );
 }
 
@@ -42,8 +26,8 @@ class PickMethod {
   factory PickMethod.image(int maxAssetsCount) {
     return PickMethod(
       icon: '🖼️',
-      name: '사진 선택',
-      description: '갤러리에서 사진을 선택합니다.',
+      name: 'Image picker',
+      description: 'Only pick image from device.',
       method: (BuildContext context, List<AssetEntity> assets) {
         return AssetPicker.pickAssets(
           context,
@@ -51,7 +35,6 @@ class PickMethod {
             maxAssets: maxAssetsCount,
             selectedAssets: assets,
             requestType: RequestType.image,
-            textDelegate: KoreanAssetPickerTextDelegate(),
           ),
         );
       },
@@ -61,8 +44,8 @@ class PickMethod {
   factory PickMethod.video(int maxAssetsCount) {
     return PickMethod(
       icon: '🎞',
-      name: '동영상 선택',
-      description: '갤러리에서 동영상을 선택합니다.',
+      name: 'Video picker',
+      description: 'Only pick video from device.',
       method: (BuildContext context, List<AssetEntity> assets) {
         return AssetPicker.pickAssets(
           context,
@@ -70,7 +53,6 @@ class PickMethod {
             maxAssets: maxAssetsCount,
             selectedAssets: assets,
             requestType: RequestType.video,
-            textDelegate: KoreanAssetPickerTextDelegate(),
           ),
         );
       },
@@ -101,8 +83,8 @@ class PickMethod {
   }) {
     return PickMethod(
       icon: '📷',
-      name: '사진 촬영',
-      description: '카메라에서 촬영한 사진을 선택합니다.',
+      name: 'Pick from camera',
+      description: 'Allow pick an asset through camera.',
       method: (BuildContext context, List<AssetEntity> assets) {
         const AssetPickerTextDelegate textDelegate = AssetPickerTextDelegate();
         return AssetPicker.pickAssets(
@@ -128,56 +110,6 @@ class PickMethod {
                   onTap: () async {
                     Feedback.forTap(context);
                     final AssetEntity? result = await _pickFromCamera(context);
-                    if (result != null) {
-                      handleResult(context, result);
-                    }
-                  },
-                  child: const Center(
-                    child: Icon(Icons.camera_enhance, size: 42.0),
-                  ),
-                ),
-              );
-            },
-          ),
-        );
-      },
-    );
-  }
-
-  factory PickMethod.camcorder({
-    required int maxAssetsCount,
-    required Function(BuildContext, AssetEntity) handleResult,
-  }) {
-    return PickMethod(
-      icon: '📸',
-      name: '동영상 촬영',
-      description: '카메라에서 촬영한 동영상을 선택합니다.',
-      method: (BuildContext context, List<AssetEntity> assets) {
-        const AssetPickerTextDelegate textDelegate = AssetPickerTextDelegate();
-        return AssetPicker.pickAssets(
-          context,
-          pickerConfig: AssetPickerConfig(
-            maxAssets: maxAssetsCount,
-            selectedAssets: assets,
-            specialItemPosition: SpecialItemPosition.prepend,
-            specialItemBuilder: (
-              BuildContext context,
-              AssetPathEntity? path,
-              int length,
-            ) {
-              if (path?.isAll != true) {
-                return null;
-              }
-              return Semantics(
-                label: textDelegate.sActionUseCameraHint,
-                button: true,
-                onTapHint: textDelegate.sActionUseCameraHint,
-                child: GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: () async {
-                    Feedback.forTap(context);
-                    final AssetEntity? result =
-                        await _pickFromCamcorder(context);
                     if (result != null) {
                       handleResult(context, result);
                     }

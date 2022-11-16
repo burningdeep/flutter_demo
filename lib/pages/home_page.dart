@@ -55,19 +55,19 @@ class _HomePageState extends State<HomePage> {
 
   Widget header(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 30.0, left: 40.0),
+      margin: const EdgeInsetsDirectional.only(top: 30.0),
       height: 60.0,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           AspectRatio(
             aspectRatio: 1.0,
             child: Hero(
               tag: 'LOGO',
-              child: Image.asset('assets/aribiologo.png'),
+              child: Image.asset('assets/flutter_candies_logo.png'),
             ),
           ),
-          const SizedBox(width: 30.0),
+          const SizedBox(width: 10.0),
           Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,7 +75,7 @@ class _HomePageState extends State<HomePage> {
               Semantics(
                 sortKey: const OrdinalSortKey(0),
                 child: Text(
-                  'Flutter Demo',
+                  'WeChat Asset Picker',
                   style: Theme.of(context).textTheme.headline6,
                 ),
               ),
@@ -105,13 +105,36 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             children: <Widget>[
               header(context),
-              const SizedBox(height: 8.0),
-              const Divider(),
-              const Expanded(
-                child: SingleAssetPage(),
+              Expanded(
+                child: PageView(
+                  controller: controller,
+                  children: const <Widget>[
+                    MultiAssetsPage(),
+                    SingleAssetPage(),
+                    CustomPickersPage(),
+                  ],
+                ),
               ),
             ],
           ),
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: currentIndex,
+          onTap: selectIndex,
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.photo_library),
+              label: 'Multi',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.photo),
+              label: 'Single',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.explore),
+              label: 'Custom',
+            ),
+          ],
         ),
       ),
     );

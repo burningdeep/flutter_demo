@@ -89,6 +89,7 @@ class _DirectoryFileAssetPickerState extends State<DirectoryFileAssetPicker> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
+                  const Text('Selected Assets'),
                   Container(
                     margin: const EdgeInsets.symmetric(
                       horizontal: 10.0,

@@ -25,18 +25,24 @@ class _SingleAssetPageState extends State<SingleAssetPage>
   @override
   List<PickMethod> get pickMethods {
     return <PickMethod>[
+      PickMethod.common(maxAssetsCount),
       PickMethod.image(maxAssetsCount),
       PickMethod.video(maxAssetsCount),
+      PickMethod.audio(maxAssetsCount),
       PickMethod.camera(
         maxAssetsCount: maxAssetsCount,
         handleResult: (BuildContext context, AssetEntity result) =>
             Navigator.of(context).pop(<AssetEntity>[result]),
       ),
-      PickMethod.camcorder(
-        maxAssetsCount: maxAssetsCount,
-        handleResult: (BuildContext context, AssetEntity result) =>
-            Navigator.of(context).pop(<AssetEntity>[result]),
-      )
+      PickMethod.cameraAndStay(maxAssetsCount: maxAssetsCount),
+      PickMethod.changeLanguages(maxAssetsCount),
+      PickMethod.threeItemsGrid(maxAssetsCount),
+      PickMethod.prependItem(maxAssetsCount),
+      PickMethod.customFilterOptions(maxAssetsCount),
+      PickMethod.preventGIFPicked(maxAssetsCount),
+      PickMethod.noPreview(maxAssetsCount),
+      PickMethod.customizableTheme(maxAssetsCount),
+      PickMethod.pathNameBuilder(maxAssetsCount),
     ];
   }
 

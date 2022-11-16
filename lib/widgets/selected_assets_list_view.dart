@@ -85,11 +85,14 @@ class SelectedAssetsListView extends StatelessWidget {
               child: Stack(
                 children: <Widget>[
                   Positioned.fill(child: _selectedAssetWidget(c, index)),
-                  AnimatedPositioned(
-                    duration: kThemeAnimationDuration,
-                    top: 6.0,
-                    right: 6.0,
-                    child: _selectedAssetDeleteButton(c, index),
+                  ValueListenableBuilder<bool>(
+                    valueListenable: isDisplayingDetail,
+                    builder: (_, bool value, __) => AnimatedPositioned(
+                      duration: kThemeAnimationDuration,
+                      top: value ? 6.0 : -30.0,
+                      right: value ? 6.0 : -30.0,
+                      child: _selectedAssetDeleteButton(c, index),
+                    ),
                   ),
                 ],
               ),
@@ -107,7 +110,11 @@ class SelectedAssetsListView extends StatelessWidget {
       builder: (_, bool value, __) => AnimatedContainer(
         duration: kThemeChangeDuration,
         curve: Curves.easeInOut,
-        height: 120.0,
+        height: assets.isNotEmpty
+            ? value
+                ? 120.0
+                : 80.0
+            : 40.0,
         child: Column(
           children: <Widget>[
             SizedBox(
@@ -115,9 +122,23 @@ class SelectedAssetsListView extends StatelessWidget {
               child: GestureDetector(
                 onTap: () {
                   if (assets.isNotEmpty) {
-                    isDisplayingDetail.value = true;
+                    isDisplayingDetail.value = !isDisplayingDetail.value;
                   }
                 },
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    const Text('Selected Assets'),
+                    if (assets.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsetsDirectional.only(start: 10.0),
+                        child: Icon(
+                          value ? Icons.arrow_downward : Icons.arrow_upward,
+                          size: 18.0,
+                        ),
+                      ),
+                  ],
+                ),
               ),
             ),
             selectedAssetsListView,
